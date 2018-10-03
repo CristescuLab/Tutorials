@@ -322,7 +322,7 @@ First is important to notice the orientation and composition of the primers.
 ### Adapter types
 Cutadapt can handle different kinds of adapters. Below a table with the type and the command line usage, with link to cutadapts website:
 |Adapter type | Command-line option|
-|--|--|
+|---|---|
 |[Regular 3’ adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#three-prime-adapters)| `-a  ADAPTER`|
 |[Regular 5’ adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#five-prime-adapters) | `-g  ADAPTER`|
 |[Anchored 3’ adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#anchored-3adapters)|`-a  ADAPTER$`|
@@ -446,7 +446,7 @@ A less strict version of anchored trimming, where the adaptors have to be at the
 
 For 3' non internal adapters we can use `-a  ADAPTERX`, and we will expect:
 |Input read|Processed read|
-|--|--|
+|---|---|
 |`APTERmysequence`|`mysequence`|
 |`ADAPTERmysequence`|`mysequence`|
 |`somethingelseADAPTERmysequence`|`somethingelseADAPTERmysequence`|
