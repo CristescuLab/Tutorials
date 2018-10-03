@@ -1,4 +1,4 @@
-# NGS Quality Control Tutorial: Understanding QC
+﻿# NGS Quality Control Tutorial: Understanding QC
 This tutorial is intended to understand basic NGS statistics (mainly obtained with FastQC), and some of the steps required to  fix or ameliorate some of the issues. Most of the information of this tutorial have been partially taken from the FastQC documentation available [here](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/Help/3%20Analysis%20Modules/).
 
 ### Objectives / learning outcomes:
@@ -27,6 +27,10 @@ This tutorial assumes that you have a basic knowledge in bash, and that you have
 12. [Overrepresented sequences](#overrepresented-sequences)
 13. [Adapter Content](#adapter-content)
 14. [Running FastQC in the paired file](#running-fastqc-in-the-paired-file)
+15. [Resolving some of the Issues](#resolving-some-of-the-issues)
+	- [Trimmomatic](#trimmomatic): remove adaptors and quality trimming
+	- [Cutadapt](#cutadapt): removing primers
+	- [Seqkit](#seqkit): removing duplicates
 
 ## To start
 
@@ -111,8 +115,7 @@ From the documentation of this module:
 This a feature that is exclusive to Illumina technologies. Their flow cells typically have 8 lanes,with 2 columns and 50 tiles:
 
 ![Flow cell pattern](https://github.com/jshleap/CristescuLab_misc/raw/master/Tutorials/NGS_QC/images/illumina_flowcell.png)
-
-Courtesy of http://zjuwhw.github.io/2016/08/13/Illumina_sequencer.html
+<sup>Courtesy of http://zjuwhw.github.io/2016/08/13/Illumina_sequencer.html</sup>
 
 When systematic error occur in a tile, it can indicate sequencing error such as bubbles, smudges, or dirt. When the errors occur very sparsely and not too widespread, is often OK to overlook this error. When a full lane has a problem, oftentimes is a sequencing error and this cannot be fixed with bioinformatics. The problem can occur as as well when the flowcell is overloaded.
 In our case we have:
@@ -142,7 +145,6 @@ This is the case for our File1:
 
 #### *Can you explain the figure above?*
 
-
 ## Per base sequence content
 This module shows the proportion of bases in each position. In an unbiased library, the proportion of A, T, C, G, should run parallel to each other. If there is a bias, this could imply that the primers or adaptors were not remove, and therefore there would be a strong bias towards a certain composition. It could also mean that you have an over-fragmented library, creating over-represented k-mers, or a dataset that has been trimmed too aggressively. In amplicon sequencing, there tends to be biases in the composition of the given amplicon, especially when dealing with mitochondrial DNA.
 
@@ -170,7 +172,7 @@ From FastQC documentation:
 
  Let's take a look at out file1:
 
-![Per sequence GC contentent](https://github.com/jshleap/CristescuLab_misc/raw/master/Tutorials/NGS_QC/files/file1_R1_fastqc/Images/per_sequence_gc_content.png)
+![Alt](https://github.com/jshleap/CristescuLab_misc/raw/master/Tutorials/NGS_QC/files/file1_R1_fastqc/Images/per_sequence_gc_content.png)
 
 #### How would you explain the two modes (double peak)?
 
@@ -232,7 +234,7 @@ Now, let's [download the pair](https://github.com/jshleap/CristescuLab_misc/raw/
 There are many programs to do QC, and many specific tools for each one. For now we are going to focus on a few popular programs.
 
 ## Trimmomatic
-This program does adaptve quality trimming, head and tail crop, and adaptor removal. You can check the documentation and download the program [here](http://www.usadellab.org/cms/index.php?page=trimmomatic). One of the advantages of trimmomatic is that it allows you to work with pair end sequences, reatining only matching pairs. Other advantage  is that it allows partial and overlaping matches for the seaching of adapters. Before we run the program, let's check at some of the options. Here I am going to focus in pair-end reads:
+This program does adaptive quality trimming, head and tail crop, and adaptor removal. You can check the documentation and download the program [here](http://www.usadellab.org/cms/index.php?page=trimmomatic). One of the advantages of trimmomatic is that it allows you to work with pair end sequences, retaining only matching pairs. Other advantage  is that it allows partial and overlapping matches for the searching of adapters. Before we run the program, let's check at some of the options. Here I am going to focus in pair-end reads, but it also works in single end:
  
  ### Efficiency and format flags
  This flags go before the invocation of the output/input files:
@@ -278,21 +280,275 @@ ligated' reads must be for PE palindrome read alignment.
 >- simpleClipThreshold: specifies how accurate the match between any adapter etc.
 sequence must be against a read.
 
-![Adapter trimming](https://github.com/jshleap/CristescuLab_misc/raw/master/Tutorials/NGS_QC/images/trimmomatic_adapter.png)
+![Adapter trimming](https://github.com/jshleap/CristescuLab_misc/raw/master/Tutorials/NGS_QC/images/trimmomatic_adapter.png =700x500)
 
 As can be seen in the figure, there are 4 possible scenarios that trimmomatic cover:
 A. Technical sequence is completely covered by the read and therefore a simple alignment will identify it.
 B. Only a partial match between the technical sequence and the read, and therefor a short alignment is needed.
 C and D.  Both pairs are tested at once, hence allowing for "is thus much more reliable than the short alignment in B, and allows adapter read-though to be detected even when only one base of the adapter has been sequenced."
 
+The `palindrome clip
+threshold` essentially tells how accurate the alignment of the adapters must be. This is the log10 probability against getting a match by random chance, and therefore values around 30 are recommended 
+
 ### Running trimmomatic
 `java -jar <path to trimmomatic.jar> PE [-threads <threads] [-phred33 | -phred64] [-trimlog <logFile>] <input 1> <input 2> <paired output 1> <unpaired output 1> <paired output 2> <unpaired output 2> <OPTIONS>`
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbLTg2Nzk2NDcxMywtOTQ5ODk3NjkxLDE1MD
-Q3NTUzMDEsODQzNjU4MTUsLTU3NjgyNzY4Miw1NzMzNDI0NTks
-NzY5NjQ1NDg0LC0xMjYxMTIzOTcwLC04ODI0NTMwMDUsLTI1NT
-Q0NDAwMiwxMDE2OTMxNTgyLC0xNjI2NzcyOTMwLDExNTYyOTI4
-NTYsLTEzMjIxMDMyOTUsLTc5NzYwNzM0LDE1MjM1MDQ0ODUsMj
-c4NTgyNzg3LDEyOTU0OTAxMjQsMjA5OTk4MjQ4NSwxMzY3NTgy
-MjYyXX0=
--->
+
+Try it out with our previous dataset! Show me the result of a fastqc on the trimmomatic results!
+
+**Name the output file1_R1_trimmed_1P.fastq.gz and file1_R2_trimmed_1P.fastq.gz for the paired results**
+
+ 
+## Cutadapt
+Cutadapt is an incredibly versatile tool to remove primers or in general oligos from the flanking regions of DNA. The user guide (which this tutorial is based on) is available [here](https://cutadapt.readthedocs.io/en/stable/guide.html).
+
+### Installation
+Cutadapt is based on virtual environments so it is better to have a local copy of it in your own home. To do so, type:
+```bash
+pip install --user --upgrade cutadapt
+```
+If you know what you are doing you can use your superuser privileges instead of `--user`. If you are in the compute canada clusters `graham` or `cedar`, first you have to load the module `scipy-stack/2018b`.
+
+Now test if everything went OK, by asking it for help like this:
+```bash
+cutadapt -h
+```
+
+### Basic Usage
+First is important to notice the orientation and composition of the primers.
+![Alt](https://www.researchgate.net/profile/Matthieu_Leray/publication/305673701/figure/fig1/AS:613889758752770@1523374132022/Scheme-for-Illumina-MiSeq-multiplex-library-preparation-using-the-tailed-PCR-primers-and_W640.jpg =750x600)
+<sup>[Preparation of Amplicon Libraries for Metabarcoding of Marine Eukaryotes Using Illumina MiSeq: The Adapter Ligation Method](https://www.researchgate.net/profile/Matthieu_Leray/publication/305673701_Preparation_of_Amplicon_Libraries_for_Metabarcoding_of_Marine_Eukaryotes_Using_Illumina_MiSeq_The_Adapter_Ligation_Method/links/5b2a97acaca27209f3787901/Preparation-of-Amplicon-Libraries-for-Metabarcoding-of-Marine-Eukaryotes-Using-Illumina-MiSeq-The-Adapter-Ligation-Method.pdf?_sg%5B0%5D=801TQTR2Nl0IB87mhwV75mBwgZlISr-9jH3OVdoOK-t1F-CTfdrp-_CnGkRa2KcJOHPsUrnzkIhhdA1lfOeecQ.Ip_RNVnvRFVy7IIJSD-PCdvGRzR85JJyn9RtEp2LPabwkVhMu3o94QCk05m2Ch3qCCO9LwGUP6bJr0v7JIARFg&_sg%5B1%5D=ka7xYaIUiIwMRQzy6GagSIdVcqky9OfkrDcHRzYG0Ta1fd1IMR0CWC8o53gILQFqRC0NT9RwowQeA4t-Jj7vGlt_pyKq_zllFEhjFGnfibjt.Ip_RNVnvRFVy7IIJSD-PCdvGRzR85JJyn9RtEp2LPabwkVhMu3o94QCk05m2Ch3qCCO9LwGUP6bJr0v7JIARFg&_iepl=)</sup>
+
+### Adapter types
+Cutadapt can handle different kinds of adapters. Below a table with the type and the command line usage, with link to cutadapts website:
+|Adapter type | Command-line option|
+|--|--|
+|[Regular 3’ adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#three-prime-adapters)| `-a  ADAPTER`|
+|[Regular 5’ adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#five-prime-adapters) | `-g  ADAPTER`|
+|[Anchored 3’ adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#anchored-3adapters)|`-a  ADAPTER$`|
+|[Anchored 5’ adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#anchored-5adapters)|`-g  ^ADAPTER`|
+|[Non-internal 3’ adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#non-internal)| `-a  ADAPTERX`|
+|[Non-internal 5’ adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#non-internal)|`-g  XADAPTER`|
+|[5’ or 3’ (both possible)](https://cutadapt.readthedocs.io/en/v1.18/guide.html#anywhere-adapters)|`-b  ADAPTER`|
+|[Linked adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#linked-adapters)|`-a  ADAPTER1...ADAPTER2`|
+|[Non-anchored linked adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#linked-nonanchored)|`-g  ADAPTER1...ADAPTER2`|
+
+### Regular 3' primers/adapters
+
+![3prime](https://raw.githubusercontent.com/CristescuLab/Tutorials/master/NGS_QC/images/3prime.png)
+<sup> Figured adapted from [here](http://gensoft.pasteur.fr/docs/cutadapt/1.6/guide.html</sup>
+
+Cutadapt first usage is to remove **regular 3' primers/adapters** from your reads:
+
+Dealing with 3' primers, cutadapt uses the option `-a`, according to their docs:
+
+> `cutadapt -a AACCGGTT -o output.fastq input.fastq`
+
+Assuming that your sequences are in `input.fastq` and are result of the amplification with the AACCGGTT.
+
+Let's assume that our sample was amplified with the primer pairs:
+* Forward primer: GTCGGTAAAACTCGTGCCAGC
+* Reverse primer: CATAGTGGGGTATCTAATCCCAGTTTG
+
+**what would be the cutadapt command you would need to cast?**
+
+<details><summary>See result here</summary><p>
+<pre>cutadapt -a CAAACTGGGATTAGATACCCCACTATG -o output.fastq input.fastq</pre>
+
+can you explain why?
+</p></details>
+
+Let's now explore our files (the ones in the first part of the tutorial)  with color zgrep:
+```bash
+zgrep --color=always "CAAACTGGGATTAGATACCCCACTATG" file1_R1_trimmed_1P.fastq.gz
+zgrep --color=always "CATAGTGGGGTATCTAATCCCAGTTTG" file1_R1_trimmed_1P.fastq.gz
+```
+**What do you see? Do the same for the R2 pair. Run cutadapt as before. What have cutadapt done?**
+
+The `-a` option of cutadapt will remove everything that comes after the 3' adapter. Therefore, if the sequence you are looking for is actually at the 5', you will essentially remove your amplicon. From cutadapt's tutorial:
+>For example, assume your fragment of interest is  _MYSEQUENCE_  and the adapter is  _ADAPTER_. Depending on the read length, you will get reads that look like this:
+```
+MYSEQUEN
+MYSEQUENCEADAP
+MYSEQUENCEADAPTER
+MYSEQUENCEADAPTERSOMETHINGELSE
+```
+>Use cutadapt’s  `-a  ADAPTER`  option to remove this type of adapter. This will be the result:
+```
+MYSEQUEN
+MYSEQUENCE
+MYSEQUENCE
+MYSEQUENCE
+```
+
+### Regular 5' primers/adapters
+![5prime](https://raw.githubusercontent.com/CristescuLab/Tutorials/master/NGS_QC/images/5prime.png)
+<sup> Figured adapted from [here](http://gensoft.pasteur.fr/docs/cutadapt/1.6/guide.html</sup>
+Regular 5' adapters are normally not recommended. <details><summary>**WHY?**</summary><p>
+Because unless  that your adapters are degraded, you would expect the 5' to be in an [anchored form](https://cutadapt.readthedocs.io/en/v1.18/guide.html#anchored-5adapters)
+</p></details>
+
+Cut adapt will keep only things **_after_** the primer/adapter:
+```
+ADAPTERMYSEQUENCE
+DAPTERMYSEQUENCE
+TERMYSEQUENCE
+SOMETHINGADAPTERMYSEQUENCE
+```
+All of the above will yield `MYSEQUENCE`, however, `SOMETHINGADAPTER` will be empty.
+
+**Repeat the same exercise as with the 3' adapter**
+
+### Anchored 3’ adapter
+![Alt](https://raw.githubusercontent.com/CristescuLab/Tutorials/master/NGS_QC/images/anchored3.png)
+<sup> Figured adapted from [here](http://gensoft.pasteur.fr/docs/cutadapt/1.6/guide.html</sup>
+Anchored adapters occur at the beginning (5') or the end (3') of the read. 3' anchored adapter removal is seldom used, since oftentimes you can have information coming after the 3' adapter. However, it can be useful when the reads have been already merged and therefore we don't expect any real sequence after the adapter. To anchor the 3' adapter, we use a `$` at the end of the adapter sequence: `-a  ADAPTER$`. It will work as follows:
+```
+MYSEQUENCEADAP
+MYSEQUENCEADAPTER
+MYSEQUENCEADAPTERSOMETHINGELSE
+```
+will result as:
+```
+MYSEQUENCEADAP
+MYSEQUENCE
+MYSEQUENCEADAPTERSOMETHINGELSE
+```
+
+### Anchored 5’ adapters
+![Alt](https://raw.githubusercontent.com/CristescuLab/Tutorials/master/NGS_QC/images/anchored5.png)
+<sup> Figured adapted from [here] (http://gensoft.pasteur.fr/docs/cutadapt/1.6/guide.html</sup>
+
+This is the more usual usage of the 5' trimming of adaptors, since we expect our read only to start **_AFTER_** our 5' primer. To use it we invoke the `-g` as before, but add a `^` in front of the adapter: `-g  ^ADAPTER`. We will get something like this:
+```
+BADAPTERMYSEQUENCESOMETHING
+ADAPTERMYSEQUENCESOMETHING
+ADAPTMYSEQUENCE
+ADAMYSEQUENCE
+```
+after `-g  ^ADAPTER` will render:
+```
+MYSEQUENCESOMETHING
+MYSEQUENCESOMETHING
+MYSEQUENCE
+MYSEQUENCE
+```
+Note that `cutadapt` allows for some errors. They call them insertions and deletions. If you are sure that your adapter is intact, you can disable this tolerance for error with `--no-indels`.
+
+### Non-internal 5’ and 3’ adapters
+A less strict version of anchored trimming, where the adaptors have to be at the end of the read, but partial occurrences are allowed. To make use of these, we add the prefix (for 5') or suffix (for 3') `X`. For 3' non internal adapters we can use `-a  ADAPTERX`, and we will expect:
+
+|Input read| Processed read|
+|----------|---------------|
+|`mysequenceADAP`|`mysequence`|
+|`mysequenceADAPTER`|`mysequence`|
+|`mysequenceADAPTERsomethingelse`|`mysequenceADAPTERsomethingelse`|
+
+For 3' non internal adapters we can use `-a  ADAPTERX`, and we will expect:
+|Input read|Processed read|
+|--|--|
+|`APTERmysequence`|`mysequence`|
+|`ADAPTERmysequence`|`mysequence`|
+|`somethingelseADAPTERmysequence`|`somethingelseADAPTERmysequence`|
+
+### Linked adapters (combined 5’ and 3’ adapter)
+If you are sure that your amplicon is framed by BOTH primer/adapters, and that the read contains them both, you can provide both adapters with the linked adapters option `-a  ADAPTER1...ADAPTER2`. Adapter1 is an anchored 5' adapter while the adapter2 can be either anchored or not. If you want to make sure that both adapters are present exactly at the ends of the fragment, then you can required a linked adapter with the 3' side anchored like `-a  ADAPTER1...ADAPTER2$`.
+
+From cutadapt documentation:
+
+>As an example, assume the 5’ adapter is  _FIRST_  and the 3’ adapter is  _SECOND_  and you have these input reads:
+```
+FIRSTMYSEQUENCESECONDEXTRABASES
+FIRSTMYSEQUENCESEC
+FIRSTMYSEQUE
+ANOTHERREADSECOND
+```
+>Trimming with
+`cutadapt -a FIRST...SECOND -o output.fastq input.fastq`
+will result in
+```
+MYSEQUENCE
+MYSEQUENCE
+MYSEQUE
+ANOTHERREADSECOND
+```
+
+This one can be particularly useful when you have your reads merged and your amplicon is framed between the two adapters.
+
+Using the `-a` option with linked adapters will always give you an anchored 5' adapter. However, you can relax this restriction by using it with the `-g` option: `-g  ADAPTER1...ADAPTER2`, in which case neither of the adapters act as anchored, but both MUST be present with some degree of tolerance.
+
+#### MORE ADVANCED OPTIONS
+There are plenty more advanced options, but we arent going to cover them in this tutorial. I encourage you to check the out in [cutadapt](https://cutadapt.readthedocs.io/en/v1.18/guide.htm) documentation. There you can see that you can modify the [error tolerance](https://cutadapt.readthedocs.io/en/v1.18/guide.html#error-tolerance), [minimum overlap](https://cutadapt.readthedocs.io/en/v1.18/guide.html#minimum-overlap-reducing-random-matches) between your adapter sequence and the read sequence, [partial matches anywhere](https://cutadapt.readthedocs.io/en/v1.18/guide.html#allowing-partial-matches-at-both-ends), or [modify read names](https://cutadapt.readthedocs.io/en/v1.18/guide.html#modifying-read-names), using [multiple adapters](https://cutadapt.readthedocs.io/en/v1.18/guide.html#multiple-adapters), etc.
+
+### Modifying reads
+As trimmomatic, cutadapt also allows you to trimm and modify your reads based on quality, lenght, etc. 
+
+#### Quality trimming
+Cutadapt allows you to adaptatively remove bases of low quality before the adapter removakl with the command `-q threshold`, threshold being the minimum quality value. Their algorithm then, cumulatively remove the bases if it does not pass the threshold (see the algorithm description [here](https://cutadapt.readthedocs.io/en/v1.18/algorithms.html#quality-trimming-algorithm)). It is similar to the sliding window in trimmomatic, but instead of computeing the average quality in the window as trimmomatic does, cutadapt extend the cut from one end until the span of bases crosses the threshold required. As an example, let's imagine that we want a quality of more than 15, then your call would be `cutadapt -q 15 -a AACCGGTT -o output.fastq input.fastq`. This will essentially trim quality to a minimum of 15 in the 3' end, and then remove the 3' adapter `AACCGGTT`.  If you would like to trimm both ends, you would need to provide two quality cut-off values: `cutadapt -q 15,10 -o output.fastq input.fastq`, in this case, `input.fastq` would be qualiy trimm on 15 in the 5' and 10 on the 3'.
+
+#### Removing bases and fixed length
+Similar to the option CROP and HEADCROP in trimmomatic, the option `--cut` or `-u` can be used to remove bases from either end of the read. To cut bases from the 5' end, you have to use positive numbers, while to cut from the 3' end, you would use negative numbers: To remove the first 5 nucleotides you can type`cutadapt -u 5 -o trimmed.fastq reads.fastq` or to remove the last 7 nucleotide, you can type `cutadapt -u -7 -o trimmed.fastq reads.fastq`. If instead of a certain amount of bases before removing adapters you want a fix length for all reads after quality trimming and adapter removal you can use `--length` or `-l`. This will remove sequence from the 3' end until all sequences have the specified length.
+
+### Filtering reads
+By default, all reads whether they were trimmed or not, would be found in the output. However, you can modify this behaviour with some options (from their docs):
+>`--minimum-length  LENGTH`  or  `-m  LENGTH`
+Discard processed reads that are shorter than LENGTH. Reads that are too short even before adapter removal are also discarded. Without this option, reads that have a length of zero (empty reads) are kept in the output.
+`--too-short-output  FILE`
+Instead of discarding the reads that are too short according to  `-m`, write them to  _FILE_  (in FASTA/FASTQ format).
+`--maximum-length  LENGTH`  or  `-M  LENGTH`
+Discard processed reads that are longer than LENGTH. Reads that are too long even before adapter removal are also discarded.
+`--too-long-output  FILE`
+Instead of discarding reads that are too long (according to  `-M`), write them to  _FILE_  (in FASTA/FASTQ format).
+`--untrimmed-output  FILE`
+Write all reads without adapters to  _FILE_  (in FASTA/FASTQ format) instead of writing them to the regular output file.
+`--discard-trimmed`
+Discard reads in which an adapter was found.
+`--discard-untrimmed`
+Discard reads in which  _no_  adapter was found. This has the same effect as specifying  `--untrimmed-output  /dev/null`.
+The options  `--too-short-output`  and  `--too-long-output`  are applied first. This means, for example, that a read that is too long will never end up in the  `--untrimmed-output`  file when  `--too-long-output`  was given, no matter whether it was trimmed or not.
+The options  `--untrimmed-output`,  `--discard-trimmed`  and  `-discard-untrimmed`  are mutually exclusive.
+
+### Trimming paired-end reads
+YES! cutadapt also allows for pair-end (PE) read trimming. This is achieved by mixing some of the flags, and adding the paired flag `-p` pointing to the output for read 2:
+```
+cutadapt -a ADAPTER_FWD -A ADAPTER_REV -o out.1.fastq -p out.2.fastq reads.1.fastq reads.2.fastq
+```
+All filtering criterions we have seen can be applied to PE reads. By default, if any of the reads pairs should be filter out, both reads would be removed or redirected. To avoid this, you can use `--pair-filter=both` (as opposed to `--pair-filter=any`) in which case the filter must happen in both reads at the same time for the filter to be effective. Output options that we saw before, should be either accompanied or modified for their paired counter part: e.g `--too-short-output`/`--too-short-paired-output`.
+
+From their docs:
+
+>These are the paired-end specific filtering and output options:
+`--minimum-length  LENGTH1:LENGTH2`  or  `-m  LENGTH1:LENGTH2`
+When trimming paired-end reads, the minimum lengths for R1 and R2 can be specified separately by separating them with a colon (`:`). If the colon syntax is not used, the same minimum length applies to both reads, as discussed above. Also, one of the values can be omitted to impose no restrictions. For example, with  `-m  17:`, the length of R1 must be at least 17, but the length of R2 is ignored.
+`--maximum-length  LENGTH1:LENGTH2`  or  `-M  LENGTH1:LENGTH2`
+Maximum lengths can also be specified separately, see the explanation of  `-m`  above.
+`--paired-output  FILE`  or  `-p  FILE`
+Write the second read of each processed pair to  _FILE_  (in FASTA/FASTQ format).
+`--untrimmed-paired-output  FILE`
+Used together with  `--untrimmed-output`. The second read in a pair is written to this file when the processed pair was  _not_  trimmed.
+`--too-short-paired-output  FILE`
+Write the second read in a pair to this file if pair is too short. Use together with  `--too-short-output`.
+`--too-long-paired-output  FILE`
+Write the second read in a pair to this file if pair is too long. Use together with  `--too-long-output`.
+`--pair-filter=(any|both)`
+Which of the reads in a paired-end read have to match the filtering criterion in order for it to be filtered.
+Note that the option names can be abbreviated as long as it is clear which option is meant (unique prefix). For example, instead of  `--untrimmed-output`  and  `--untrimmed-paired-output`, you can write  `--untrimmed-o`  and  `--untrimmed-p`.
+
+### Practice time
+Now take the pair end reads we have been working with and:
+1. Remove primers
+2. Retain reads in the range of 100 to 200 bps
+3. Remove low quality tail and head
+4. Verify that indeed 1,2, and 3 worked.
+
+## Seqkit
+There are different ways to process duplicates. [Seqkit](https://bioinf.shenwei.me/seqkit/) can not only remove duplicates, but manipulate sequences efficiently. I will not enter in details of Seqkit in this tutorial (expect a seqkit tutorial in the future), and will focus on one of the option: [`rmdup`](https://bioinf.shenwei.me/seqkit/usage/#rmdup). This option can remove duplicates either by sequence or by name:
+
+- `seqkit rmdup -s -o clean.fastq input.fastq`: Remove duplicate sequences from `input.fastq` and will save them in `clean.fastq`
+- `seqkit rmdup -n -o clean.fastq input.fastq`: Same as before, but will only remove duplicate names.
+
+One interesting feature of `seqkit rmdup` is that it gives you the option of having a report of the duplicates with the representative read associated with all the cluster of reads. It also allows for saving the duplicated reads in case you need them later or want to analyze them:
+```
+seqkit rmdup -s -i -m -o  clean.fastq -d duplicated.fa.gz -D duplicated.detail.txt input.fastq
+```
+
+Try it on the data we have been working with, and check the report.
