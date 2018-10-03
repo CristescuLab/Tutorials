@@ -280,7 +280,7 @@ ligated' reads must be for PE palindrome read alignment.
 >- simpleClipThreshold: specifies how accurate the match between any adapter etc.
 sequence must be against a read.
 
-![Adapter trimming](https://github.com/jshleap/CristescuLab_misc/raw/master/Tutorials/NGS_QC/images/trimmomatic_adapter.png =700x500)
+![Alt](https://github.com/jshleap/CristescuLab_misc/raw/master/Tutorials/NGS_QC/images/trimmomatic_adapter.png)
 
 As can be seen in the figure, there are 4 possible scenarios that trimmomatic cover:
 A. Technical sequence is completely covered by the read and therefore a simple alignment will identify it.
