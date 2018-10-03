@@ -321,6 +321,8 @@ First is important to notice the orientation and composition of the primers.
 
 ### Adapter types
 Cutadapt can handle different kinds of adapters. Below a table with the type and the command line usage, with link to cutadapts website:
+
+
 |Adapter type | Command-line option|
 |---|---|
 |[Regular 3’ adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#three-prime-adapters)| `-a  ADAPTER`|
@@ -332,6 +334,7 @@ Cutadapt can handle different kinds of adapters. Below a table with the type and
 |[5’ or 3’ (both possible)](https://cutadapt.readthedocs.io/en/v1.18/guide.html#anywhere-adapters)|`-b  ADAPTER`|
 |[Linked adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#linked-adapters)|`-a  ADAPTER1...ADAPTER2`|
 |[Non-anchored linked adapter](https://cutadapt.readthedocs.io/en/v1.18/guide.html#linked-nonanchored)|`-g  ADAPTER1...ADAPTER2`|
+
 
 ### Regular 3' primers/adapters
 
@@ -444,12 +447,16 @@ A less strict version of anchored trimming, where the adaptors have to be at the
 |`mysequenceADAPTER`|`mysequence`|
 |`mysequenceADAPTERsomethingelse`|`mysequenceADAPTERsomethingelse`|
 
+
 For 3' non internal adapters we can use `-a  ADAPTERX`, and we will expect:
+
+
 |Input read|Processed read|
 |---|---|
 |`APTERmysequence`|`mysequence`|
 |`ADAPTERmysequence`|`mysequence`|
 |`somethingelseADAPTERmysequence`|`somethingelseADAPTERmysequence`|
+
 
 ### Linked adapters (combined 5’ and 3’ adapter)
 If you are sure that your amplicon is framed by BOTH primer/adapters, and that the read contains them both, you can provide both adapters with the linked adapters option `-a  ADAPTER1...ADAPTER2`. Adapter1 is an anchored 5' adapter while the adapter2 can be either anchored or not. If you want to make sure that both adapters are present exactly at the ends of the fragment, then you can required a linked adapter with the 3' side anchored like `-a  ADAPTER1...ADAPTER2$`.
