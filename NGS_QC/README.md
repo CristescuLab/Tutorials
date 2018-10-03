@@ -315,7 +315,7 @@ cutadapt -h
 
 ### Basic Usage
 First is important to notice the orientation and composition of the primers.
-![adapters](https://www.researchgate.net/profile/Matthieu_Leray/publication/305673701/figure/fig1/AS:613889758752770@1523374132022/Scheme-for-Illumina-MiSeq-multiplex-library-preparation-using-the-tailed-PCR-primers-and_W640.jpg =750x600)
+![Alt](https://raw.githubusercontent.com/CristescuLab/Tutorials/master/NGS_QC/images/adapters.jpg)
 <sup>[Preparation of Amplicon Libraries for Metabarcoding of Marine Eukaryotes Using Illumina MiSeq: The Adapter Ligation Method](https://www.researchgate.net/profile/Matthieu_Leray/publication/305673701_Preparation_of_Amplicon_Libraries_for_Metabarcoding_of_Marine_Eukaryotes_Using_Illumina_MiSeq_The_Adapter_Ligation_Method/links/5b2a97acaca27209f3787901/Preparation-of-Amplicon-Libraries-for-Metabarcoding-of-Marine-Eukaryotes-Using-Illumina-MiSeq-The-Adapter-Ligation-Method.pdf?_sg%5B0%5D=801TQTR2Nl0IB87mhwV75mBwgZlISr-9jH3OVdoOK-t1F-CTfdrp-_CnGkRa2KcJOHPsUrnzkIhhdA1lfOeecQ.Ip_RNVnvRFVy7IIJSD-PCdvGRzR85JJyn9RtEp2LPabwkVhMu3o94QCk05m2Ch3qCCO9LwGUP6bJr0v7JIARFg&_sg%5B1%5D=ka7xYaIUiIwMRQzy6GagSIdVcqky9OfkrDcHRzYG0Ta1fd1IMR0CWC8o53gILQFqRC0NT9RwowQeA4t-Jj7vGlt_pyKq_zllFEhjFGnfibjt.Ip_RNVnvRFVy7IIJSD-PCdvGRzR85JJyn9RtEp2LPabwkVhMu3o94QCk05m2Ch3qCCO9LwGUP6bJr0v7JIARFg&_iepl=)</sup>
 
 ### Adapter types
