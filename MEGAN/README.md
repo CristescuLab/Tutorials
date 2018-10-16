@@ -132,32 +132,53 @@ WHY?? Because the sizes and complexities of metagenomics datasets can be bigger 
 To set up a server you have to download the [standalone](http://www-ab.informatik.uni-tuebingen.de/data/software/meganserver/download/MeganServer-standalone.1.0.1.zip) version of meganserver, and setup the start script. MeganServer can be then access through the MEGAN GUI.
 
 ## Visualization with MEGAN
-MEGAN have many utilities to visualize your data, here just a few examples (focusing more in non-functional exploration):
+MEGAN have many utilities to visualize your data, here just a few examples (focusing more in non-functional exploration). Most visualization options are regarding the number of reads after filtering.
 
 ### Basic visualization
+By default, MEGAN will display a taxonomic tree (NCBI) and the size of the nodes in the tree is the number of reads in that node.
 <p align="center">
-<img src="https://github.com/CristescuLab/Tutorials/raw/master/MEGAN/files/basic_tree.jpg" width="680" height="600">
-</p>
+<img src="https://www.researchgate.net/profile/Suparna_Mitra/publication/221686029/figure/fig1/AS:305399644344320@1449824357694/Taxonomic-analysis-of-200-000-reads-of-a-marine-dataset-DNA-Time1-Bag1-8-by-MEGAN_W640.jpg" width="680" height="600">
+</p><sup> https://www.researchgate.net/profile/Suparna_Mitra/publication/221686029/figure/fig4/AS:305399644344323@1449824357872/Comparative-visualization-of-eight-marine-datasets-8-displaying-the-bacterial-part-of.png </sup>
 
 ### Comparative visualization
 In MEGAN one can upload results of multiple datasets and have a comparative view the relative abundance of reads in each sample or group:
 
 <p align="center">
 <img src="https://www.researchgate.net/profile/Suparna_Mitra/publication/221686029/figure/fig4/AS:305399644344323@1449824357872/Comparative-visualization-of-eight-marine-datasets-8-displaying-the-bacterial-part-of.png" width="680" height="600">
-</p>
+</p><sup> https://www.researchgate.net/profile/Suparna_Mitra/publication/221686029/figure/fig4/AS:305399644344323@1449824357872/Comparative-visualization-of-eight-marine-datasets-8-displaying-the-bacterial-part-of.png </sup>
+
+Likewise, nodes can be displayed as pie-charts:
 
 <p align="center">
 <img src="https://media.springernature.com/lw785/springer-static/image/art%3A10.1186%2F1471-2105-10-S1-S12/MediaObjects/12859_2009_Article_3195_Fig4_HTML.jpg" width="680" height="600">
-</p>
+</p><sup> https://media.springernature.com/lw785/springer-static/image/art%3A10.1186%2F1471-2105-10-S1-S12/MediaObjects/12859_2009_Article_3195_Fig4_HTML.jpg</sup>
 
+### Network visualization/Analyses
+MEGAN allows you to represent your data in network from to see the relationships among your samples:
 
 <p align="center">
 <img src="https://ab.inf.uni-tuebingen.de/software/megan4/images/MEGAN-taxonomy-Goodall-neighbor-net.png/image_preview" width="680" height="600">
-</p>
+</p> <sup> MEGAN webpage </sup>
 
 ## Practice time!
+Using MEGAN directly is VERY slow if you have not set up the server, so for now we will work with their data-sets to get to know the program: 
+1) Open from server
+![enter image description here](https://github.com/CristescuLab/Tutorials/raw/master/MEGAN/files/MEGAN1.png)
 
+2) Connect with Tuebingen server using the `guest` as both login as password (default)
+![enter image description here](https://github.com/CristescuLab/Tutorials/raw/master/MEGAN/files/MEGAN2.png)
 
+3) We will work with the daisy dataset. Select all of them.
+![](https://github.com/CristescuLab/Tutorials/raw/master/MEGAN/files/MEGAN3.png)
+
+4) Select all the samples
+![](https://github.com/CristescuLab/Tutorials/raw/master/MEGAN/files/MEGAN4.png)
+
+Now that the server is loaded, let's explore (This bit is done interactively).
+**1. What is the most diverse day?**
+**2. What is the best representation for comparative diversity?**
+**3. What does the taxonomy profile tells you?**
+**4. Has the sampling been enough?**
 
 ## Time Permitting: BASTA
 ![enter image description here](https://i0.wp.com/www.palmbeachcountycta.org/wp-content/uploads/2017/10/website-construction-graphic-4.jpg?w=1024)
