@@ -181,4 +181,49 @@ Now that the server is loaded, let's explore (This bit is done interactively).
 **4. Has the sampling been enough?**
 
 ## Time Permitting: BASTA
-![enter image description here](https://i0.wp.com/www.palmbeachcountycta.org/wp-content/uploads/2017/10/website-construction-graphic-4.jpg?w=1024)
+Basic Sequence Taxonomy Annotation tool BASTA ([Tim Kahlke & Ralph 2018](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13095)), uses a similar approach to taxonimic binning as MEGAN, the LCA. The pipeline is as follows:
+
+![enter image description here](https://wol-prod-cdn.literatumonline.com/cms/attachment/e53190a0-c7df-49eb-9b21-9676e33c852d/mee313095-fig-0001-m.jpg)
+<sup>[Tim Kahlke & Ralph 2018](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13095)</sup>
+
+#### Filter weak hits
+BASTA has a number of filters available to process your blast output:
+1. `-e` is the evalue threshold which by defaultb is `0.00001`
+2. `-l` controls the Alignment length. By default is `100`
+3. `-n` Maximum number of hits to use
+4. `-i` Minimum percent identity
+
+#### Determine hit taxonomy
+BASTA matches the each hit with the blast subject taxonomy based on the accession number, thereby circumventing the need for `taxids`.
+
+#### Determine Query LCA
+After the taxonomy tree has been inferred, each read is map to it and the **L**ast **C**ommon **A**ncestor of the required reads is inferred. Some commands are available to control the LCA algorithm:
+1. `-m` is the minimum number of hits that sequence must have to be assigned an LCA, by default is `3`
+2. `-p` Percentage of hits that are used for LCA estimation. Must be between 51-100 (default: 100).
+
+When the `p` option is different than 100, BASTA will assign the taxonomies where the required percentage of hits are shared.
+
+#### Output/Visualization
+BASTA's output is a list of taxonomic LCA assignments. When used with th `-v` option, the most verborse output is given:
+```
+### Sequence1
+11  Bacteria;Bacteroidetes;
+11  Bacteria;Bacteroidetes;Flavobacteriia;
+11  Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;
+11  Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;
+6   Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;Nonlabens;
+1   Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;Leeuwenhoekiella;
+1   Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;Croceibacter;
+1   Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;Dokdonia;
+2   Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;Siansivirga;
+```
+As per their docs:
+>In the above example, Sequence1
+>-   had 11 hits in the input blast file
+>- was assigned Flavobacteriaceae as the LCA (all hits are of this taxon)
+>- had hits to 5 different genera: Nonlabens (6 hits), Leeuwenhoekiella (1 hit), Croceibacter (1 hit), Dokdonia (1 hit) and Siansivirga (2 hits)
+
+BASTA also ships with extra scripts to plot the results, although it requires [KRONA](https://github.com/marbl/Krona/wiki), a hierarchical visualization tool:
+![enter image description here](https://wol-prod-cdn.literatumonline.com/cms/attachment/d2447e62-ad3b-45a9-b4bb-53fa89aa2bb8/mee313095-fig-0002-m.jpg)
+  
+I can help you installing BASTA and setting up your first run, but this is outside of this tutorial!!!
