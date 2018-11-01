@@ -242,6 +242,8 @@ blastn -db cystic_fib.db -query /path/to/query/nameoffasta.fasta -perc_identity 
 
 This gives us all entries with a percent identities over 90%.  
 
+#### **BEWARE OF THE USE OF `max_target_seqs`, SINCE THE OUTPUT IS NOT SORTED, THEREFORE YOU STILL MIGHT NOT HAVE THE BEST HITS. THIS EFFECT IS DESCRIBED IN [Shah et al. 2018](https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/bty833/5106166)
+
 
 ## Basic bash manipulation of output
 
