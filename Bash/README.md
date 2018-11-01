@@ -8,9 +8,9 @@ This very basic tutorial is to introcuce a complete novice in the use of bash. T
 
 The terminal is your friend, and you'll see why. The terminal is the way we talk directly to the computer without windows and cliking. It looks something like this:
 
-
-<img src="https://github.com/CristescuLab/Tutorials/raw/master/Bash/images/Terminal.png" width="500px">
-
+<p align="center">
+<img src="https://github.com/CristescuLab/Tutorials/raw/master/Bash/images/Terminal.png" width="800">
+</p>
 
 If you work in windows you will need to install an ssh-enabled terminal like [mobaxterm](https://mobaxterm.mobatek.net/) or [putty](https://www.putty.org/). This tutorial will asume you already have installed and read the instructions of your terminal.
 
@@ -89,8 +89,9 @@ nano afile.txt
 ```
 
 You should see something like this:
-
-<img src="https://github.com/CristescuLab/Tutorials/raw/master/Bash/images/nano.png" width="500px">
+<p align="center">
+<img src="https://github.com/CristescuLab/Tutorials/raw/master/Bash/images/nano.png" width="800">
+</p>
 
 You can write anything you want there. Lets try just typing "this is a test file". To close and save you have to press the `ctrl + x`. It will ask you if you want to save what you just write, type `Y` and `enter`.
 So you might be asking if you have to open nano everytime you need to read the file without modyfying it? The answer is no. There are a few commands you can use:
