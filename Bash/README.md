@@ -7,8 +7,7 @@ This very basic tutorial is to introcuce a complete novice in the use of bash. T
 ## Don't be afraid of the terminal
 
 The terminal is your friend, and you'll see why. The terminal is the way we talk directly to the computer without windows and cliking. It looks something like this:
-
-<img src="files/images/Terminal.png" width="500px">
+<img src="https://raw.githubusercontent.com/jshleap/CristescuLab_misc/master/Tutorials/Bash/files/images/Terminal.png"  alt="alt text" width="500px">
 
 If you work in windows you will need to install an ssh-enabled terminal like [mobaxterm](https://mobaxterm.mobatek.net/) or [putty](https://www.putty.org/). This tutorial will asume you already have installed and read the instructions of your terminal.
 
