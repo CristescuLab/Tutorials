@@ -81,6 +81,7 @@ For our file we get:
 ### Encoding
 Encoding is the way the quality of the bases are written. There are many encodings, but the most popular are Sanger, Solexa, Ilumina 1.3+, Illumina 1.5+, and illumina 1.8+.  In summary, is a character that represents the confidence you have in a given base call.
 ![Phred Score encodings descriptions, from https://en.wikipedia.org/wiki/FASTQ_format#Encoding](https://github.com/jshleap/CristescuLab_misc/raw/master/Tutorials/NGS_QC/images/fastq_phread-base.png)
+
 For more information check https://en.wikipedia.org/wiki/FASTQ_format#Encoding
 
 But what does a quality score means? It s related to the probability of an error:
